@@ -1,15 +1,18 @@
 #!/bin/bash
 #Note users will require a github account and need to have virtualenv installed
-#!/bin/bash
-#Note users will require a github account and need to have virtualenv installed
 
 setup(){
 
   #First make a directory in which simulation data and programs will be kept
   mkdir ./Simulation
+  mkdir ./ES_cell_data
+
+  #Download single-cell (and bulk) data
+  cd ES_cell_data
+  cat ../standard_2i_LIF.txt | xargs -n 1 -P 1 wget -t 100 -q
 
   #Install programs in directory
-  cd Simulation
+  cd ../Simulation
 
   #Install RSEM
   wget https://github.com/deweylab/RSEM/archive/v1.3.0.tar.gz
@@ -38,7 +41,7 @@ setup(){
   else
     echo "Successfully installed Sailfish"
   fi
-  
+
   #Install eXpress
   wget https://pachterlab.github.io/eXpress/downloads/express-1.5.1/express-1.5.1-linux_x86_64.tgz
   tar -xvzf express-1.5.1-linux_x86_64.tgz
@@ -141,6 +144,10 @@ setup(){
 
   mkdir ref
   mkdir results_matrices
+
+  mkdir figures/data
+  mkdir figures/pngs
+  mkdir figures/pdfs 
 
 }
 
