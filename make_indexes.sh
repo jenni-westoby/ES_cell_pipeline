@@ -1,12 +1,5 @@
 #!/bin/bash
 
-#Make all indexes
-cd Simulation/Salmon_results
-mkdir Salmon_Alignment_Results
-mkdir Salmon_SMEM_results
-mkdir Salmon_quasi_results
-cd ../..
-
 if [ ! "$(ls -A Simulation/indices/Salmon_SMEM)" ]; then
   ./Simulation/Salmon-0.8.2_linux_x86_64/bin/salmon index -t Simulation/ref/reference.transcripts.fa -i Simulation/indices/Salmon_SMEM/transcripts_index_SMEM --type fmd -p 2
 fi
