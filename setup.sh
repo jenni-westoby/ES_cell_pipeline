@@ -145,9 +145,10 @@ setup(){
   mkdir ref
   mkdir results_matrices
 
+  cd ..
   mkdir figures/data
   mkdir figures/pngs
-  mkdir figures/pdfs 
+  mkdir figures/pdfs
 
 }
 
