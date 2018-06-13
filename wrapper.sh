@@ -5,7 +5,7 @@ path_to_ref_fasta=$1
 path_to_ref_gtf=$2
 
 ./setup.sh setup
-./RSEM_ref.sh make_ref path_to_ref_gtf path_to_ref_fasta
+./RSEM_ref.sh make_ref $path_to_ref_gtf $path_to_ref_fasta
 ./make_indexes.sh
 gunzip ES_cell_data/*
 
