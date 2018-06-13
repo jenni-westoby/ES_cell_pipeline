@@ -1,12 +1,28 @@
 #!/bin/bash
 
+#rename command line arguments
+path_to_ref_fasta=$1
+path_to_ref_gtf=$2
+
 ./setup.sh setup
 ./RSEM_ref.sh make_ref path_to_ref_gtf path_to_ref_fasta
 ./make_indexes.sh
+gunzip ES_cell_data/*
+
 
 for i in ES_cell_data/*_1.fastq;
 do
-  ./cell_level_analysis.sh $i
+  num_jobs=`bjobs | wc -l`
+  max_jobs=30
+
+  #This prevents the number of queued jobs greatly exceeding 30.
+  while [[ $num_jobs -gt $max_jobs ]];
+  do
+    sleep 100
+    num_jobs=`bjobs | wc -l`
+  done
+
+  bsub -n4 -R"span[hosts=1]" -c 99999 -G team_hemberg -q normal -o $TEAM/temp.logs/output.$i -e $TEAM/temp.logs/error.$i -R"select[mem>100000] rusage[mem=100000]" -M100000 ./cell_level_analysis.sh $i
 done
 
 #make clean results matrices
@@ -14,12 +30,10 @@ done
 ./make_matrix.sh make_matrix eXpress
 ./make_matrix.sh make_matrix Kallisto
 ./make_matrix.sh make_matrix Sailfish
-./make_matrix.sh make_matrix Salmon_align
-./make_matrix.sh make_matrix Salmon_SMEM
-./make_matrix.sh make_matrix Salmon_quasi
+./make_matrix.sh make_matrix Salmon
 ./make_matrix.sh make_matrix ground_truth
-./make_matrix.sh make_matrix Kallisto_real
-./clean_data.sh
+python generate.py
+./clean_data.sh Kallisto_real `pwd` Simulation/Kallisto_real_results
 
 #move data - some of this should move into setup.sh
 cp Simulation/results_matrices/clean* raw_results/data/
