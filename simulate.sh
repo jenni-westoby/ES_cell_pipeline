@@ -26,8 +26,7 @@ simulate() {
 
 
  #Make filename strings
- base=`echo $1 |awk -F/ '{print $2}'`
- filename=`echo $base | rev | cut -d _ -f2- | rev`
+ filename=`echo $1 | rev | cut -d _ -f2- | rev`
  end=`echo $base |awk -F. '{print $(NF-1)"."$(NF)}'`
  filename_1=$filename"_1."$end
  filename_2=$filename"_2."$end
