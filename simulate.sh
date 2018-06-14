@@ -27,19 +27,14 @@ simulate() {
 
  #Make filename strings
  filename=`echo $1 | rev | cut -d _ -f2- | rev`
- end=`echo $base |awk -F. '{print $(NF-1)"."$(NF)}'`
+ end=`echo $1 |awk -F. '{print $(NF-1)"."$(NF)}'`
  filename_1=$filename"_1."$end
  filename_2=$filename"_2."$end
  raw_data_dir=${2%/}
 
- #Find number of reads in input files
- echo $raw_data_dir/$base
- gunzip -c $raw_data_dir/$base > $raw_data_dir/$filename'_1.fastq'
-
  lines="$(wc -l $raw_data_dir/$filename'_1.fastq' | awk '{print $1}')"
  reads="$(echo $((lines / 4)))"
 
- rm $raw_data_dir/$filename'_1.fastq'
 
  #Use RSEM to calculate expression
  ./Simulation/RSEM-1.3.0/rsem-calculate-expression --paired-end --star-gzipped-read-file --star\
