@@ -1,7 +1,7 @@
 #!/bin/bash
 
-base=`echo $1 |awk -F/ '{print $2}'`
-filename=`echo $base |awk -F_ '{print $1}'`
+
+filename=`echo $1 |awk -F_ '{print $1}'`
 
 ./quality_control.sh qualitycontrol $filename ES_cell_data '_1.fq' 'raw'
 ./simulate.sh simulate $filename'_1.fastq' ES_cell_data
