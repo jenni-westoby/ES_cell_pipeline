@@ -6,7 +6,7 @@ path_to_ref_gtf=$2
 
 ./setup.sh setup
 ./RSEM_ref.sh make_ref $path_to_ref_gtf $path_to_ref_fasta
-./make_indexes.sh
+./make_indexes.sh $path_to_ref_gtf $path_to_ref_fasta
 gunzip ES_cell_data/*
 
 
@@ -32,8 +32,8 @@ done
 ./make_matrix.sh make_matrix Sailfish
 ./make_matrix.sh make_matrix Salmon
 ./make_matrix.sh make_matrix ground_truth
-python generate.py
-./clean_data.sh Kallisto_real `pwd` Simulation/Kallisto_real_results
+python generate.py Kallisto_real `pwd` Simulation/Kallisto_real_results
+./clean_data.sh
 
 #move data - some of this should move into setup.sh
 cp Simulation/results_matrices/clean* raw_results/data/
