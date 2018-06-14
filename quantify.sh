@@ -4,6 +4,7 @@
 
 RSEM(){
 
+  mkdir Simulation/RSEM_results
   filename=$1
 
   #Start the clock for RSEM
@@ -52,6 +53,8 @@ Salmon(){
 
 	#Rename/reformat input arguments
   filename=$1
+
+  mkdir Simulation/Salmon_results
 
 	mkdir Simulation/Salmon_results/Salmon_Alignment_Results/$filename
 	mkdir Simulation/Salmon_results/Salmon_SMEM_results/$filename
@@ -132,6 +135,7 @@ eXpress () {
   filename=$1
 
 	#make a directory for the results of eXpress for each cell
+  mkdir Simulation/eXpress_results
 	mkdir Simulation/eXpress_results/$filename
 
   if [ ! -f Simulation/bamfiles/simulated/$filename'Aligned.toTranscriptome.out.bam' ]; then
@@ -160,6 +164,7 @@ Kallisto () {
 
 	#make a directory for the results of Kallisto for each cell
 	filename=$1
+  mkdir Simulation/Kallisto_results
 	mkdir Simulation/Kallisto_results/$filename
 
 	#Start the clock for kallisto
@@ -183,6 +188,8 @@ Sailfish(){
   #make a directory for the results of sailfish for each cell
   filename=$1
   library_type=$2
+  
+  mkdir Simulation/Sailfish_results
   mkdir Simulation/Sailfish_results/$filename
   export LD_LIBRARY_PATH=`pwd`/SailfishBeta-0.10.0_CentOS5/lib:$LD_LIBRARY_PATH
   export PATH=`pwd`/SailfishBeta-0.10.0_CentOS5/bin:$PATH
