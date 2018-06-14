@@ -23,7 +23,7 @@ do
     num_jobs=`bjobs | wc -l`
   done
 
-  bsub -n8 -R"span[hosts=1]" -c 99999 -G team_hemberg -q normal -o $TEAM/temp.logs/output.$i -e $TEAM/temp.logs/error.$i -R"select[mem>100000] rusage[mem=100000]" -M100000 ./cell_level_analysis.sh $filename
+  bsub -n8 -R"span[hosts=1]" -c 99999 -G team_hemberg -q normal -o $TEAM/temp.logs/output.$filename -e $TEAM/temp.logs/error.$filename -R"select[mem>100000] rusage[mem=100000]" -M100000 ./cell_level_analysis.sh $filename
 done
 
 # #make clean results matrices
