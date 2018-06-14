@@ -37,7 +37,7 @@ simulate() {
 
 
  #Use RSEM to calculate expression
- ./Simulation/RSEM-1.3.0/rsem-calculate-expression --paired-end --star-gzipped-read-file --star\
+ ./Simulation/RSEM-1.3.0/rsem-calculate-expression --paired-end --star\
        --star-path Simulation/STAR/bin/Linux_x86_64/ \
        -p 8 \
                    --estimate-rspd \
@@ -56,8 +56,6 @@ simulate() {
                        Simulation/data/temp/$filename".isoforms.results" $background_noise $reads Simulation/data/simulated/$filename \
                        --seed 0
 
- #Tidy up
- rm -r Simulation/data/temp/$filename*
 }
 
 export -f simulate
