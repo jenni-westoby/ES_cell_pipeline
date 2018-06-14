@@ -27,7 +27,7 @@ simulate() {
 
  #Make filename strings
  filename=`echo $1 | rev | cut -d _ -f2- | rev`
- end=`echo $1 |awk -F. '{print $(NF-1)"."$(NF)}'`
+ end=`echo $1 |awk -F. '{print $2}'`
  filename_1=$filename"_1."$end
  filename_2=$filename"_2."$end
  raw_data_dir=${2%/}
