@@ -34,6 +34,7 @@
 ./make_matrix.sh make_matrix Salmon
 ./make_matrix.sh make_matrix ground_truth
 python generate.py Kallisto_real `pwd` Simulation/Kallisto_results_real_data
+chmod +x Kallisto_real_Counts.sh
 ./Kallisto_real_Counts.sh
 ./clean_data.sh
 
