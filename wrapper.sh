@@ -34,6 +34,7 @@
 ./make_matrix.sh make_matrix Salmon
 ./make_matrix.sh make_matrix ground_truth
 python generate.py Kallisto_real `pwd` Simulation/Kallisto_real_results
+./Kallisto_real_Counts.sh
 ./clean_data.sh
 
 #move data - some of this should move into setup.sh
@@ -41,22 +42,22 @@ cp Simulation/results_matrices/clean* raw_results/data/
 
 #format data to make figures
 cd raw_results
-/software/R-3.4.0/bin/Rscript Figure2.R
-/software/R-3.4.0/bin/Rscript Figure4.R
-/software/R-3.4.0/bin/Rscript Figure5a.R
-/software/R-3.4.0/bin/Rscript Figure5b.R
-/software/R-3.4.0/bin/Rscript Figure6.R
-/software/R-3.4.0/bin/Rscript SupplementaryFigure10.R
-/software/R-3.4.0/bin/Rscript SupplementaryFigure11.R
-/software/R-3.4.0/bin/Rscript SupplementaryFigure12.R
+/software/R-3.3.0/bin/Rscript Figure2.R
+/software/R-3.3.0/bin/Rscript Figure4.R
+/software/R-3.3.0/bin/Rscript Figure5a.R
+/software/R-3.3.0/bin/Rscript Figure5b.R
+/software/R-3.3.0/bin/Rscript Figure6.R
+/software/R-3.3.0/bin/Rscript SupplementaryFigure10.R
+/software/R-3.3.0/bin/Rscript SupplementaryFigure11.R
+/software/R-3.3.0/bin/Rscript SupplementaryFigure12.R
 
 #make figure pdfs
 cd ../figures/scripts
-/software/R-3.4.0/bin/Rscript Figure2.R
-/software/R-3.4.0/bin/Rscript Figure5.R
-/software/R-3.4.0/bin/Rscript Figure6.R
-/software/R-3.4.0/bin/Rscript SupplementaryFigure10.R
-/software/R-3.4.0/bin/Rscript SupplementaryFigure11.R
-/software/R-3.4.0/bin/Rscript SupplementaryFigure12.R
-/software/R-3.4.0/bin/Rscript SupplementaryFigure16.R
-/software/R-3.4.0/bin/Rscript SupplementaryFigure17.R
+/software/R-3.3.0/bin/Rscript Figure2.R
+/software/R-3.3.0/bin/Rscript Figure5.R
+/software/R-3.3.0/bin/Rscript Figure6.R
+/software/R-3.3.0/bin/Rscript SupplementaryFigure10.R
+/software/R-3.3.0/bin/Rscript SupplementaryFigure11.R
+/software/R-3.3.0/bin/Rscript SupplementaryFigure12.R
+/software/R-3.3.0/bin/Rscript SupplementaryFigure16.R
+/software/R-3.3.0/bin/Rscript SupplementaryFigure17.R
