@@ -33,7 +33,7 @@
 ./make_matrix.sh make_matrix Sailfish
 ./make_matrix.sh make_matrix Salmon
 ./make_matrix.sh make_matrix ground_truth
-python generate.py Kallisto_real `pwd` Simulation/Kallisto_real_results
+python generate.py Kallisto_real `pwd` Simulation/Kallisto_results_real_data
 ./Kallisto_real_Counts.sh
 ./clean_data.sh
 
