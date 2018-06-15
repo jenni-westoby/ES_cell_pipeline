@@ -32,7 +32,7 @@ simulate() {
  filename_2=$filename"_2."$end
  raw_data_dir=${2%/}
 
- lines="$(wc -l $raw_data_dir/$filename'_1.fastq' | awk '{print $1}')"
+ lines="$(wc -l $raw_data_dir/$filename_1 | awk '{print $1}')"
  reads="$(echo $((lines / 4)))"
 
 

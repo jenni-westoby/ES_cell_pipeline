@@ -114,7 +114,7 @@ STAR_and_RSeQC() {
   Unmapped=`grep "Unmapped reads:" Simulation/QC_stats/"temp_"$subdir/$filename"bam_stat" | awk '{print $NF}'`
   NumAlignments=`grep "Total records:" Simulation/QC_stats/"temp_"$subdir/$filename"bam_stat" | awk '{print $NF}'`
 
-  lines="$(wc -l $data_dir/$filename"_"$end | awk '{print $1}')"
+  lines="$(wc -l $data_dir/$filename$end | awk '{print $1}')"
   reads="$(echo $((lines / 4)))"
 
   #Append stats to csv file
