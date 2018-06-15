@@ -35,7 +35,7 @@ elif program == "Kallisto":
     writefile("Kallisto", "Simulation/Kallisto_results/*/abundance.tsv", "rsem-generate-data-matrix3", "Counts")
     writefile("Kallisto", "Simulation/Kallisto_results/*/abundance.tsv", "rsem-generate-data-matrix4", "TPM")
 
-lif program == "Kallisto_real":
+elif program == "Kallisto_real":
     writefile("Kallisto_real", "Simulation/Kallisto_real_results/*/abundance.tsv", "rsem-generate-data-matrix3", "Counts")
     writefile("Kallisto_real", "Simulation/Kallisto_real_results/*/abundance.tsv", "rsem-generate-data-matrix4", "TPM")
 
