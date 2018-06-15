@@ -5,6 +5,7 @@
 library(ggplot2)
 library(ggpubr)
 library(reshape2)
+library(scater)
 
 single_cell<-read.table("data/clean_Kallisto_real_Counts.txt")
 single_cell<-single_cell[,colnames(single_cell)!='ERR522956', drop=FALSE]

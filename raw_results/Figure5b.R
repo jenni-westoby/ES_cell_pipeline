@@ -158,8 +158,8 @@ plot_cor_expr_zeros<-function(path,filter_filter, x_lab_text, y_lab_text, title,
   return(correlation_zeros_exprs)
 }
 
-ES_sim_cor_expr_zeros<-plot_cor_expr_zeros("Dropbox/Teichmann/clean_ground_truth_counts.txt",filter_ES," ", " ", "\nSimulated ES cells", FALSE, "simulated_ES")
-ES_real_cor_expr_zeros<-plot_cor_expr_zeros("Dropbox/Teichmann/clean_Kallisto_real_Counts.txt", filter_ES, "log2(counts + 1)", " ", "\nReal ES cells", FALSE, "real_ES")
+ES_sim_cor_expr_zeros<-plot_cor_expr_zeros("data/clean_ground_truth_counts.txt",filter_ES," ", " ", "\nSimulated ES cells", FALSE, "simulated_ES")
+ES_real_cor_expr_zeros<-plot_cor_expr_zeros("data/clean_Kallisto_real_Counts.txt", filter_ES, "log2(counts + 1)", " ", "\nReal ES cells", FALSE, "real_ES")
 
 df<-rbind(ES_sim_cor_expr_zeros, ES_real_cor_expr_zeros)
 colnames(df)[3]<-"ID"
