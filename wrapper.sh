@@ -40,6 +40,8 @@ chmod +x Kallisto_real_Counts.sh
 
 #move data - some of this should move into setup.sh
 cp Simulation/results_matrices/clean* raw_results/data/
+cp -r Simulation/QC_stats/raw raw_results/data/
+cp -r Simulation/QC_stats/simulated raw_results/data/
 
 # #format data to make figures
 # cd raw_results

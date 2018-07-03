@@ -44,46 +44,49 @@ make_batch<-function(counts_data){
   return(batch)
 }
 
-mt_isoforms<-c("ENSMUST00000082387", "ENSMUST00000082388", "ENSMUST00000082389", "ENSMUST00000082390", "ENSMUST00000082391", "ENSMUST00000082392", "ENSMUST00000082393", "ENSMUST00000082394", "ENSMUST00000082395", "ENSMUST00000082396", "ENSMUST00000082397", "ENSMUST00000082398", "ENSMUST00000082399", "ENSMUST00000082400", "ENSMUST00000082401", "ENSMUST00000082402", "ENSMUST00000082403", "ENSMUST00000082404", "ENSMUST00000082405", "ENSMUST00000082406", "ENSMUST00000082407", "ENSMUST00000082408", "ENSMUST00000082409", "ENSMUST00000082410", "ENSMUST00000082411", "ENSMUST00000082412", "ENSMUST00000084013", "ENSMUST00000082414", "ENSMUST00000082415", "ENSMUST00000082416", "ENSMUST00000082417", "ENSMUST00000082418", "ENSMUST00000082419", "ENSMUST00000082420", "ENSMUST00000082421", "ENSMUST00000082422", "ENSMUST00000082423")
 ids<-names(single_cell)
 batch<-make_batch(single_cell)
 
-anno<-new("AnnotatedDataFrame", as.data.frame(cbind(batch,ids)))
+anno<-as.data.frame(cbind(batch,ids))
 rownames(anno)<-anno$ids
-teich_scater <- scater::newSCESet(
-  countData = single_cell,
-  phenoData = anno
+
+teich_scater <- SingleCellExperiment(
+  assays = list(counts = as.matrix(single_cell)), 
+  colData = anno
 )
 
-teich_scater_QC <- scater::calculateQCMetrics(
+mt_isoforms<-c("ENSMUST00000082387", "ENSMUST00000082388", "ENSMUST00000082389", "ENSMUST00000082390", "ENSMUST00000082391", "ENSMUST00000082392", "ENSMUST00000082393", "ENSMUST00000082394", "ENSMUST00000082395", "ENSMUST00000082396", "ENSMUST00000082397", "ENSMUST00000082398", "ENSMUST00000082399", "ENSMUST00000082400", "ENSMUST00000082401", "ENSMUST00000082402", "ENSMUST00000082403", "ENSMUST00000082404", "ENSMUST00000082405", "ENSMUST00000082406", "ENSMUST00000082407", "ENSMUST00000082408", "ENSMUST00000082409", "ENSMUST00000082410", "ENSMUST00000082411", "ENSMUST00000082412", "ENSMUST00000084013", "ENSMUST00000082414", "ENSMUST00000082415", "ENSMUST00000082416", "ENSMUST00000082417", "ENSMUST00000082418", "ENSMUST00000082419", "ENSMUST00000082420", "ENSMUST00000082421", "ENSMUST00000082422", "ENSMUST00000082423")
+isSpike(teich_scater, "MT") <- rownames(teich_scater) %in% mt_isoforms
+
+teich_scater_QC <- calculateQCMetrics(
   teich_scater,
-  feature_controls = list(MT = mt_isoforms)
+  feature_controls = list(MT = isSpike(teich_scater, "MT"))
 )
 
-mt_reads<-scater::plotPhenoData(
+mt_reads<-plotPhenoData(
   teich_scater_QC,
   aes_string(x = "total_features",
-             y = "pct_counts_feature_controls_MT",
+             y = "pct_counts_MT",
              colour = "batch")
 )
 
 teich_scater_QC<-teich_scater_QC[,teich_scater_QC$pct_counts_feature_controls_MT<10]
 
 #Read in QC statistics files
-QC_raw<-read.csv("../Simulation/QC_stats/raw/read_alignment_qc.csv")
+QC_raw<-read.csv("data/raw/read_alignment_qc.csv")
 
 #Filters applied based on Supplementary Figure 10
-filter<-QC_raw[QC_raw$NonUnique<2500000 & QC_raw$NumReads<12000000 & QC_raw$NumReads>3500000 & QC_raw$NumAlignments>4000000 & QC_raw$NumAlignments< 32000000,]
-filter<-filter[filter$Filename %in% teich_scater_QC$ids,]
-filter<-filter[filter$Filename!='ERR522956',]
+filter_ES<-QC_raw[QC_raw$NonUnique<2500000 & QC_raw$NumReads<12000000 & QC_raw$NumReads>3500000 & QC_raw$NumAlignments>4000000 & QC_raw$NumAlignments< 32000000,]
+filter_ES<-filter_ES[filter_ES$Filename %in% teich_scater_QC$ids,]
+filter_ES<-filter_ES[filter_ES$Filename!='ERR522956',]
 
-rm(list=setdiff(ls(), c("filter")))
+rm(list=setdiff(ls(), c("filter_ES")))
 #######################################
 
 single_cell<-read.table("data/clean_ground_truth_counts.txt")
 
-#filter relevant cells
-single_cell<-single_cell[,colnames(single_cell) %in% filter$Filename]
+#filter_ES relevant cells
+single_cell<-single_cell[,colnames(single_cell) %in% filter_ES$Filename]
 
 mt_isoforms<-c("ENSMUST00000082387", "ENSMUST00000082388", "ENSMUST00000082389", "ENSMUST00000082390", "ENSMUST00000082391", "ENSMUST00000082392", "ENSMUST00000082393", "ENSMUST00000082394", "ENSMUST00000082395", "ENSMUST00000082396", "ENSMUST00000082397", "ENSMUST00000082398", "ENSMUST00000082399", "ENSMUST00000082400", "ENSMUST00000082401", "ENSMUST00000082402", "ENSMUST00000082403", "ENSMUST00000082404", "ENSMUST00000082405", "ENSMUST00000082406", "ENSMUST00000082407", "ENSMUST00000082408", "ENSMUST00000082409", "ENSMUST00000082410", "ENSMUST00000082411", "ENSMUST00000082412", "ENSMUST00000084013", "ENSMUST00000082414", "ENSMUST00000082415", "ENSMUST00000082416", "ENSMUST00000082417", "ENSMUST00000082418", "ENSMUST00000082419", "ENSMUST00000082420", "ENSMUST00000082421", "ENSMUST00000082422", "ENSMUST00000082423")
 ids<-names(single_cell)
@@ -111,23 +114,23 @@ mt_reads<-scater::plotPhenoData(
 teich_scater_QC<-teich_scater_QC[,teich_scater_QC$pct_counts_feature_controls_MT<10]
 
 #Read in QC statistics files
-QC_Sim<-read.csv(""../Simulation/QC_stats/simulated/read_alignment_qc.csv")
+QC_Sim<-read.csv("data/simulated/read_alignment_qc.csv")
 
 #Keep only filtered cells
-QC_Sim<-QC_Sim[QC_Sim$Filename %in% filter$Filename,]
+QC_Sim<-QC_Sim[QC_Sim$Filename %in% filter_ES$Filename,]
 
 #Filters applied based on plots
-filter<-QC_Sim[QC_Sim$Unique>5000000,]
-filter<-filter[filter$Filename %in% teich_scater_QC$ids,]
+filter_ES<-QC_Sim[QC_Sim$Unique>5000000,]
+filter_ES<-filter_ES[filter_ES$Filename %in% teich_scater_QC$ids,]
 
-rm(list=setdiff(ls(), c("filter")))
+rm(list=setdiff(ls(), c("filter_ES")))
 ################################################################################
 #LOAD DATA AND PROCESS IT
 
 #Function which loads data, subsets it and orders it
-data_processing<-function(path, filter){
+data_processing<-function(path, filter_ES){
   results<-read.table(path)
-  results<-results[,colnames(results) %in% filter$Filename]
+  results<-results[,colnames(results) %in% filter_ES$Filename]
   results<-results[ , order(colnames(results))]
   results<-results[order(rownames(results)),]
   return(results)
@@ -135,15 +138,15 @@ data_processing<-function(path, filter){
 
 
 #load data
-ground_truth<-data_processing("data/clean_ground_truth_TPM.txt", filter)
-RSEM<-data_processing("data/clean_RSEM_TPM.txt", filter)
-Salmon_align<-data_processing("data/clean_Salmon_align_TPM.txt", filter)
-Salmon_quasi<-data_processing("data/clean_Salmon_quasi_TPM.txt", filter)
-Salmon_SMEM<-data_processing("data/clean_Salmon_SMEM_TPM.txt", filter)
-Sailfish<-data_processing("data/clean_Sailfish_TPM.txt", filter)
-eXpress<-data_processing("data/clean_eXpress_TPM.txt", filter)
-Kallisto<-data_processing("data/clean_Kallisto_TPM.txt", filter)
-Updated_Salmon_align<-data_processing("data/clean_Updated_Salmon_Alignment_Results_TPM.txt", filter)
+ground_truth<-data_processing("data/clean_ground_truth_TPM.txt", filter_ES)
+RSEM<-data_processing("data/clean_RSEM_TPM.txt", filter_ES)
+Salmon_align<-data_processing("data/clean_Salmon_align_TPM.txt", filter_ES)
+Salmon_quasi<-data_processing("data/clean_Salmon_quasi_TPM.txt", filter_ES)
+Salmon_SMEM<-data_processing("data/clean_Salmon_SMEM_TPM.txt", filter_ES)
+Sailfish<-data_processing("data/clean_Sailfish_TPM.txt", filter_ES)
+eXpress<-data_processing("data/clean_eXpress_TPM.txt", filter_ES)
+Kallisto<-data_processing("data/clean_Kallisto_TPM.txt", filter_ES)
+Updated_Salmon_align<-data_processing("data/clean_Updated_Salmon_Alignment_Results_TPM.txt", filter_ES)
 
 ################################################################################
 # SPEARMAN'S GRAPH
@@ -289,4 +292,4 @@ spearmans_data<-cbind(spearmans_data, statistic=rep("spearmans", nrow(spearmans_
 nrmse_data<-cbind(nrmse_data, statistic=rep("nrmse", nrow(nrmse_data)))
 
 ggplot_results<-rbind(spearmans_data,nrmse_data,F1_data,precision_data,recall_data)
-write.table(ggplot_results, "Benchmarking_paper/processed_files/data/Figure2.txt")
+write.table(ggplot_results, "../figures/data/Figure2.txt")
