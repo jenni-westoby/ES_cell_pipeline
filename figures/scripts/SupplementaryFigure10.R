@@ -33,10 +33,10 @@ NumReads<-NumReads + geom_hline(yintercept=12000000/1000000, color='red', linety
 
 load("../data/SupplementaryFigure10_scater_object.RData")
 
-mt_reads<-scater::plotPhenoData(
+mt_reads<-plotPhenoData(
   teich_scater_QC,
   aes_string(x = "total_features",
-             y = "pct_counts_feature_controls_MT",
+             y = "pct_counts_MT",
              colour = "batch")
 )
 

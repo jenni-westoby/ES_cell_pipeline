@@ -113,7 +113,7 @@ g_legend<-function(a.gplot){
 
 Figure_5b_data<-read.table("../data/Figure5b.txt")
 
-leg_cor<-g_legend(plot_cor_expr_zeros(Figure_5b_data, "simulated_B", " ", "% zeros", "Simulated\nB lymphocytes", TRUE))
+leg_cor<-g_legend(plot_cor_expr_zeros(Figure_5b_data, "simulated_ES", " ", "% zeros", "Simulated ES cells", TRUE))
 
 ES_sim_cor_expr_zeros<-plot_cor_expr_zeros(Figure_5b_data, "simulated_ES"," ", " ", "\nSimulated ES cells", FALSE)
 ES_real_cor_expr_zeros<-plot_cor_expr_zeros(Figure_5b_data, "real_ES", "log2(counts + 1)", " ", "\nReal ES cells", FALSE)

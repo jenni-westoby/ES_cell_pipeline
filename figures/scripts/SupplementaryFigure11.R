@@ -28,10 +28,10 @@ NumReads<-ggplot(data=QC_raw, aes(x=reorder(Filename,NumReads), y=NumReads/10000
 
 load("../data/SupplementaryFigure11_scater_object.RData")
 
-mt_reads<-scater::plotPhenoData(
+mt_reads<-plotPhenoData(
   teich_scater_QC,
   aes_string(x = "total_features",
-             y = "pct_counts_feature_controls_MT",
+             y = "pct_counts_MT",
              colour = "batch")
 )
 

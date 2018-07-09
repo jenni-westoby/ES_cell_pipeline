@@ -80,33 +80,7 @@ g_legend<-function(a.gplot){
   legend
 }
 
-#Function which returns name of transcripts with (s-o)^2>30 for splatter/polyester
-shrink_nrmse<-function(){
-  RSEM<-data_processing("data/BLUEPRINT_results_benchmark_2/polyester/results_matrices/clean_RSEM_TPM.txt", filter_bias)
-  ground_truth<-read.table("data/BLUEPRINT_results_benchmark_2/polyester/results_matrices/clean_ground_truth_TPM.txt")
-  extra_rows<-RSEM[!rownames(RSEM) %in% rownames(ground_truth),]
-  extra_rows[extra_rows!=0]<-0
-  ground_truth<-rbind(ground_truth,extra_rows)
-  ground_truth<-ground_truth[ , order(colnames(ground_truth))]
-  ground_truth<-ground_truth[order(rownames(ground_truth)),]
-  why_nrmse_big<-(log2(RSEM+1)-log2(ground_truth+1))^2
-  why_nrmse_big<-rowMeans(why_nrmse_big)
 
-  RSEM_r<-data_processing("data/BLUEPRINT_results_benchmark_2/RSEM/results_matrices/clean_RSEM_TPM.txt", filter_RSEM)
-  ground_truth_r<-data_processing("data/BLUEPRINT_results_benchmark_2/RSEM/results_matrices/clean_ground_truth_TPM.txt", filter_RSEM)
-  why_nrmse_small<-(log2(RSEM_r+1)-log2(ground_truth_r+1))^2
-  why_nrmse_small<-rowMeans(why_nrmse_small)
-  plot(why_nrmse_small, why_nrmse_big, ylim=c(0,130), xlim=c(0,130))
-  problem_isoforms<-why_nrmse_big[why_nrmse_big>30]
-  return(names(why_nrmse_big[why_nrmse_big>30]))
-}
-
-find_nrmse<-function(ground_truth, tool, rows_to_avoid){
-  ground_truth<-ground_truth[!rownames(ground_truth) %in% rows_to_avoid,]
-  tool<-tool[!rownames(tool) %in% rows_to_avoid,]
-  nrmse<-nrmse(log2(tool+1),log2(ground_truth+1))
-  return(nrmse)
-}
 
 ################################################################################
 #LOAD DATA AND PROCESS IT

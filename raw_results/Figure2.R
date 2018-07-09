@@ -6,6 +6,7 @@ library(ggplot2)
 library(ggpubr)
 library(reshape2)
 library(scater)
+library(SingleCellExperiment)
 
 single_cell<-read.table("data/clean_Kallisto_real_Counts.txt")
 single_cell<-single_cell[,colnames(single_cell)!='ERR522956', drop=FALSE]
@@ -70,10 +71,11 @@ mt_reads<-plotPhenoData(
              colour = "batch")
 )
 
-teich_scater_QC<-teich_scater_QC[,teich_scater_QC$pct_counts_feature_controls_MT<10]
+teich_scater_QC<-teich_scater_QC[,teich_scater_QC$pct_counts_MT<10]
 
 #Read in QC statistics files
-QC_raw<-read.csv("data/raw/read_alignment_qc.csv")
+QC_raw<-read.csv("data/raw/read_alignment_qc.csv", header=FALSE)
+names(QC_raw)<-c("Filename","Unique","NonUnique","Unmapped","NumAlignments","NumReads")
 
 #Filters applied based on Supplementary Figure 10
 filter_ES<-QC_raw[QC_raw$NonUnique<2500000 & QC_raw$NumReads<12000000 & QC_raw$NumReads>3500000 & QC_raw$NumAlignments>4000000 & QC_raw$NumAlignments< 32000000,]
@@ -88,33 +90,38 @@ single_cell<-read.table("data/clean_ground_truth_counts.txt")
 #filter_ES relevant cells
 single_cell<-single_cell[,colnames(single_cell) %in% filter_ES$Filename]
 
-mt_isoforms<-c("ENSMUST00000082387", "ENSMUST00000082388", "ENSMUST00000082389", "ENSMUST00000082390", "ENSMUST00000082391", "ENSMUST00000082392", "ENSMUST00000082393", "ENSMUST00000082394", "ENSMUST00000082395", "ENSMUST00000082396", "ENSMUST00000082397", "ENSMUST00000082398", "ENSMUST00000082399", "ENSMUST00000082400", "ENSMUST00000082401", "ENSMUST00000082402", "ENSMUST00000082403", "ENSMUST00000082404", "ENSMUST00000082405", "ENSMUST00000082406", "ENSMUST00000082407", "ENSMUST00000082408", "ENSMUST00000082409", "ENSMUST00000082410", "ENSMUST00000082411", "ENSMUST00000082412", "ENSMUST00000084013", "ENSMUST00000082414", "ENSMUST00000082415", "ENSMUST00000082416", "ENSMUST00000082417", "ENSMUST00000082418", "ENSMUST00000082419", "ENSMUST00000082420", "ENSMUST00000082421", "ENSMUST00000082422", "ENSMUST00000082423")
+
 ids<-names(single_cell)
 batch<-rep("batch", ncol(single_cell))
 
-anno<-new("AnnotatedDataFrame", as.data.frame(cbind(batch,ids)))
+anno<-as.data.frame(cbind(batch,ids))
 rownames(anno)<-anno$ids
-teich_scater <- scater::newSCESet(
-  countData = single_cell,
-  phenoData = anno
+
+teich_scater <- SingleCellExperiment(
+  assays = list(counts = as.matrix(single_cell)), 
+  colData = anno
 )
 
-teich_scater_QC <- scater::calculateQCMetrics(
+mt_isoforms<-c("ENSMUST00000082387", "ENSMUST00000082388", "ENSMUST00000082389", "ENSMUST00000082390", "ENSMUST00000082391", "ENSMUST00000082392", "ENSMUST00000082393", "ENSMUST00000082394", "ENSMUST00000082395", "ENSMUST00000082396", "ENSMUST00000082397", "ENSMUST00000082398", "ENSMUST00000082399", "ENSMUST00000082400", "ENSMUST00000082401", "ENSMUST00000082402", "ENSMUST00000082403", "ENSMUST00000082404", "ENSMUST00000082405", "ENSMUST00000082406", "ENSMUST00000082407", "ENSMUST00000082408", "ENSMUST00000082409", "ENSMUST00000082410", "ENSMUST00000082411", "ENSMUST00000082412", "ENSMUST00000084013", "ENSMUST00000082414", "ENSMUST00000082415", "ENSMUST00000082416", "ENSMUST00000082417", "ENSMUST00000082418", "ENSMUST00000082419", "ENSMUST00000082420", "ENSMUST00000082421", "ENSMUST00000082422", "ENSMUST00000082423")
+isSpike(teich_scater, "MT") <- rownames(teich_scater) %in% mt_isoforms
+
+teich_scater_QC <- calculateQCMetrics(
   teich_scater,
-  feature_controls = list(MT = mt_isoforms)
+  feature_controls = list(MT = isSpike(teich_scater, "MT"))
 )
 
-mt_reads<-scater::plotPhenoData(
+mt_reads<-plotPhenoData(
   teich_scater_QC,
   aes_string(x = "total_features",
-             y = "pct_counts_feature_controls_MT",
+             y = "pct_counts_MT",
              colour = "batch")
 )
 
-teich_scater_QC<-teich_scater_QC[,teich_scater_QC$pct_counts_feature_controls_MT<10]
+teich_scater_QC<-teich_scater_QC[,teich_scater_QC$pct_counts_MT<10]
 
 #Read in QC statistics files
 QC_Sim<-read.csv("data/simulated/read_alignment_qc.csv")
+names(QC_Sim)<-c("Filename","Unique","NonUnique","Unmapped","NumAlignments","NumReads")
 
 #Keep only filtered cells
 QC_Sim<-QC_Sim[QC_Sim$Filename %in% filter_ES$Filename,]
@@ -146,7 +153,7 @@ Salmon_SMEM<-data_processing("data/clean_Salmon_SMEM_TPM.txt", filter_ES)
 Sailfish<-data_processing("data/clean_Sailfish_TPM.txt", filter_ES)
 eXpress<-data_processing("data/clean_eXpress_TPM.txt", filter_ES)
 Kallisto<-data_processing("data/clean_Kallisto_TPM.txt", filter_ES)
-Updated_Salmon_align<-data_processing("data/clean_Updated_Salmon_Alignment_Results_TPM.txt", filter_ES)
+
 
 ################################################################################
 # SPEARMAN'S GRAPH
@@ -164,12 +171,12 @@ Salmon_SMEM_cor<-correlation(Salmon_SMEM, ground_truth)
 Sailfish_cor<-correlation(Sailfish, ground_truth)
 eXpress_cor<-correlation(eXpress, ground_truth)
 Kallisto_cor<-correlation(Kallisto, ground_truth)
-Updated_Salmon_align_cor<-correlation(Updated_Salmon_align, ground_truth)
+
 
 
 
 #get data into right format and make boxplot
-spearmans_data<-melt(rbind(RSEM_cor,Salmon_align_cor,Updated_Salmon_align_cor, Salmon_quasi_cor, Salmon_SMEM_cor, Sailfish_cor, eXpress_cor, Kallisto_cor))
+spearmans_data<-melt(rbind(RSEM_cor,Salmon_align_cor, Salmon_quasi_cor, Salmon_SMEM_cor, Sailfish_cor, eXpress_cor, Kallisto_cor))
 
 ############################################################################################
 # NRMSE GRAPH
@@ -184,10 +191,10 @@ Salmon_SMEM_nmrse<-nrmse(log2(Salmon_SMEM+1),log2(ground_truth+1))
 Sailfish_nmrse<-nrmse(log2(1+Sailfish),log2(ground_truth+1))
 eXpress_nmrse<-nrmse(log2(eXpress+1),log2(ground_truth+1))
 Kallisto_nmrse<-nrmse(log2(Kallisto+1),log2(ground_truth+1))
-Updated_Salmon_align_nmrse<-nrmse(log2(Updated_Salmon_align + 1), log2(ground_truth+1))
 
-#get data into right format and make boxplot
-nrmse_data<-melt(rbind(RSEM_nmrse,Salmon_align_nmrse, Updated_Salmon_align_nmrse, Salmon_quasi_nmrse, Salmon_SMEM_nmrse, Sailfish_nmrse, eXpress_nmrse, Kallisto_nmrse))
+
+#get data into right format
+nrmse_data<-melt(rbind(RSEM_nmrse,Salmon_align_nmrse, Salmon_quasi_nmrse, Salmon_SMEM_nmrse, Sailfish_nmrse, eXpress_nmrse, Kallisto_nmrse))
 
 ###############################################################################################
 # PRECISION GRAPH
@@ -221,9 +228,8 @@ Salmon_SMEM_precision<-return_precision_per_cell(ground_truth,Salmon_SMEM)[,1]
 Sailfish_precision<-return_precision_per_cell(ground_truth,Sailfish)[,1]
 eXpress_precision<-return_precision_per_cell(ground_truth,eXpress)[,1]
 Kallisto_precision<-return_precision_per_cell(ground_truth,Kallisto)[,1]
-Updated_Salmon_align_precision<-return_precision_per_cell(ground_truth,Updated_Salmon_align)[,1]
 
-precision_data<-melt(rbind(RSEM_precision,Salmon_align_precision, Updated_Salmon_align_precision, Salmon_quasi_precision, Salmon_SMEM_precision, Sailfish_precision, eXpress_precision, Kallisto_precision))
+precision_data<-melt(rbind(RSEM_precision,Salmon_align_precision, Salmon_quasi_precision, Salmon_SMEM_precision, Sailfish_precision, eXpress_precision, Kallisto_precision))
 
 #################################################################################################
 # RECALL PLOTS
@@ -257,9 +263,9 @@ Salmon_SMEM_recall<-return_recall_per_cell(ground_truth,Salmon_SMEM)[,1]
 Sailfish_recall<-return_recall_per_cell(ground_truth,Sailfish)[,1]
 eXpress_recall<-return_recall_per_cell(ground_truth,eXpress)[,1]
 Kallisto_recall<-return_recall_per_cell(ground_truth,Kallisto)[,1]
-Updated_Salmon_align_recall<-return_recall_per_cell(ground_truth,Updated_Salmon_align)[,1]
 
-recall_data<-melt(rbind(RSEM_recall,Salmon_align_recall, Updated_Salmon_align_recall, Salmon_quasi_recall, Salmon_SMEM_recall, Sailfish_recall, eXpress_recall, Kallisto_recall))
+
+recall_data<-melt(rbind(RSEM_recall,Salmon_align_recall, Salmon_quasi_recall, Salmon_SMEM_recall, Sailfish_recall, eXpress_recall, Kallisto_recall))
 
 
 ##############################################################################################
@@ -277,9 +283,8 @@ Salmon_SMEM_F1<-find_F1(Salmon_SMEM_precision, Salmon_SMEM_recall)
 Sailfish_F1<-find_F1(Sailfish_precision, Sailfish_recall)
 eXpress_F1<-find_F1(eXpress_precision, eXpress_recall)
 Kallisto_F1<-find_F1(Kallisto_precision, Kallisto_recall)
-Updated_Salmon_align_F1<-find_F1(Updated_Salmon_align_precision, Updated_Salmon_align_recall)
 
-F1_data<-melt(rbind(RSEM_F1,Salmon_align_F1, Updated_Salmon_align_F1, Salmon_quasi_F1, Salmon_SMEM_F1, Sailfish_F1, eXpress_F1, Kallisto_F1))
+F1_data<-melt(rbind(RSEM_F1,Salmon_align_F1, Salmon_quasi_F1, Salmon_SMEM_F1, Sailfish_F1, eXpress_F1, Kallisto_F1))
 
 F1_data$Var2<-as.character(F1_data$Var2)
 precision_data$Var2<-as.character(precision_data$Var2)
