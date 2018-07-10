@@ -23,7 +23,7 @@ cbbPalette <- c("#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00"
 
 #function to create ggplot object
 make_ggplot<-function(df, title, ylabel){
-  p<-ggplot(data=df, aes(x=Tool, y=Value, colour=Experiment)) + geom_point( position=position_jitter(width = .2), stat = "identity") + facet_grid(~Tool, scales= "free_x",space = "free_x")
+  p<-ggplot(df %>% dplyr::arrange(desc(Experiment)), aes(x=Tool, y=Value, colour=Experiment)) + geom_point( position=position_jitter(width = .2), stat = "identity") + facet_grid(~Tool, scales= "free_x",space = "free_x")
   p<-p + theme(legend.position = 'none', axis.title.x=element_blank(),
                axis.text.x=element_blank(),
                axis.ticks.x=element_blank(), text = element_text(size=14), strip.text.x = element_text(size=14))

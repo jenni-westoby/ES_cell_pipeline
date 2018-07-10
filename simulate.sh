@@ -35,17 +35,33 @@ simulate() {
  lines="$(wc -l $raw_data_dir/$filename_1 | awk '{print $1}')"
  reads="$(echo $((lines / 4)))"
 
+#process bulk without single cell priors
+ if [ "$filename" == "ERR522956" ]
+ then
+   echo 'bulk sample being simulated'
+   #Use RSEM to calculate expression
+   ./Simulation/RSEM-1.3.0/rsem-calculate-expression --paired-end --star\
+         --star-path Simulation/STAR/bin/Linux_x86_64/ \
+         -p 8 \
+                     --estimate-rspd \
+                     --append-names \
+                     --output-genome-bam \
+                     $raw_data_dir/$filename_1 $raw_data_dir/$filename_2 \
+                     Simulation/ref/reference Simulation/data/temp/$filename
+  else
+    #Use RSEM to calculate expression
+    ./Simulation/RSEM-1.3.0/rsem-calculate-expression --paired-end --star\
+          --star-path Simulation/STAR/bin/Linux_x86_64/ \
+          -p 8 \
+                      --estimate-rspd \
+                      --append-names \
+                      --output-genome-bam \
+          --single-cell-prior --calc-pme \
+                      $raw_data_dir/$filename_1 $raw_data_dir/$filename_2 \
+                      Simulation/ref/reference Simulation/data/temp/$filename
+  fi
 
- #Use RSEM to calculate expression
- ./Simulation/RSEM-1.3.0/rsem-calculate-expression --paired-end --star\
-       --star-path Simulation/STAR/bin/Linux_x86_64/ \
-       -p 8 \
-                   --estimate-rspd \
-                   --append-names \
-                   --output-genome-bam \
-       --single-cell-prior --calc-pme \
-                   $raw_data_dir/$filename_1 $raw_data_dir/$filename_2 \
-                   Simulation/ref/reference Simulation/data/temp/$filename
+
 
  #extract first number of third line of filename.theta, which is an estimate of the portion of reads due to background noise
  background_noise=`sed '3q;d' Simulation/data/temp/$filename".stat"/$filename".theta" | awk '{print $1}'`

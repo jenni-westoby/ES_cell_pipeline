@@ -297,4 +297,4 @@ percentage_vs_expression<-function(df,path,filter,bulk,id){
 ES_percent_exprs_plot<-percentage_vs_expression(ES_num_iso, "data/clean_Kallisto_real_Counts.txt", filter_ES, bulk_ES, "ES")
 
 
-write.table(ES_percent_exprs_data, "../figures/data/Figure_6_percent_exprs.txt")
+write.table(ES_percent_exprs_plot, "../figures/data/Figure_6_percent_exprs.txt")

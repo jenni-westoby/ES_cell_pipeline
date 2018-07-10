@@ -11,14 +11,31 @@ RSEM(){
   start_RSEM=`date +%s`
 
   #RSEM
-  ./Simulation/RSEM-1.3.0/rsem-calculate-expression --paired-end --star\
-		    --star-path Simulation/STAR/bin/Linux_x86_64 \
-		    -p 8 \
-        --append-names \
-		    --single-cell-prior --calc-pme \
-		    --time \
-        Simulation/data/simulated/$filename'_1.fq' Simulation/data/simulated/$filename'_2.fq' \
-        Simulation/ref/reference Simulation/RSEM_results/$filename
+  #process bulk without single cell priors
+   if [ "$filename" == "ERR522956" ]
+   then
+     echo 'bulk sample being processed'
+     #Use RSEM to calculate expression
+     ./Simulation/RSEM-1.3.0/rsem-calculate-expression --paired-end --star\
+           --star-path Simulation/STAR/bin/Linux_x86_64/ \
+           -p 8 \
+                       --append-names \
+                       --output-genome-bam \
+                       $raw_data_dir/$filename_1 $raw_data_dir/$filename_2 \
+                       Simulation/ref/reference Simulation/data/temp/$filename
+    else
+      #Use RSEM to calculate expression
+      ./Simulation/RSEM-1.3.0/rsem-calculate-expression --paired-end --star\
+            --star-path Simulation/STAR/bin/Linux_x86_64/ \
+            -p 8 \
+                        --append-names \
+                        --output-genome-bam \
+            --single-cell-prior --calc-pme \
+                        $raw_data_dir/$filename_1 $raw_data_dir/$filename_2 \
+                        Simulation/ref/reference Simulation/data/temp/$filename
+    fi
+
+
 
 
 	#Stop the clock for RSEM
@@ -188,7 +205,7 @@ Sailfish(){
   #make a directory for the results of sailfish for each cell
   filename=$1
   library_type=$2
-  
+
   mkdir Simulation/Sailfish_results
   mkdir Simulation/Sailfish_results/$filename
   export LD_LIBRARY_PATH=`pwd`/SailfishBeta-0.10.0_CentOS5/lib:$LD_LIBRARY_PATH
