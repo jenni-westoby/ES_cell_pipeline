@@ -22,7 +22,7 @@ RSEM(){
            --append-names \
           --output-genome-bam \
           Simulation/data/simulated/$filename'_1.fq' Simulation/data/simulated/$filename'_2.fq' \
-          Simulation/ref/reference Simulation/data/temp/$filename
+          Simulation/ref/reference Simulation/RSEM_results/$filename
     else
       #Use RSEM to calculate expression
       ./Simulation/RSEM-1.3.0/rsem-calculate-expression --paired-end --star\
@@ -32,7 +32,7 @@ RSEM(){
                         --output-genome-bam \
             --single-cell-prior --calc-pme \
                         Simulation/data/simulated/$filename'_1.fq' Simulation/data/simulated/$filename'_2.fq' \
-                        Simulation/ref/reference Simulation/data/temp/$filename
+                        Simulation/ref/reference Simulation/RSEM_results/$filename
     fi
 
 
