@@ -21,7 +21,7 @@ RSEM(){
            -p 8 \
            --append-names \
           --output-genome-bam \
-          $raw_data_dir/$filename'_1.fq' $raw_data_dir/$filename'_2.fq' \
+          Simulation/data/simulated/$filename'_1.fq' Simulation/data/simulated/$filename'_2.fq' \
           Simulation/ref/reference Simulation/data/temp/$filename
     else
       #Use RSEM to calculate expression
@@ -31,7 +31,7 @@ RSEM(){
                         --append-names \
                         --output-genome-bam \
             --single-cell-prior --calc-pme \
-                        $raw_data_dir/$filename'_1.fq' $raw_data_dir/$filename'_2.fq' \
+                        Simulation/data/simulated/$filename'_1.fq' Simulation/data/simulated/$filename'_2.fq' \
                         Simulation/ref/reference Simulation/data/temp/$filename
     fi
 
