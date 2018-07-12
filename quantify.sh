@@ -19,10 +19,10 @@ RSEM(){
      ./Simulation/RSEM-1.3.0/rsem-calculate-expression --paired-end --star\
            --star-path Simulation/STAR/bin/Linux_x86_64/ \
            -p 8 \
-                       --append-names \
-                       --output-genome-bam \
-                       $raw_data_dir/$filename_1 $raw_data_dir/$filename_2 \
-                       Simulation/ref/reference Simulation/data/temp/$filename
+           --append-names \
+          --output-genome-bam \
+          $raw_data_dir/$filename'_1.fq' $raw_data_dir/$filename'_2.fq' \
+          Simulation/ref/reference Simulation/data/temp/$filename
     else
       #Use RSEM to calculate expression
       ./Simulation/RSEM-1.3.0/rsem-calculate-expression --paired-end --star\
@@ -31,7 +31,7 @@ RSEM(){
                         --append-names \
                         --output-genome-bam \
             --single-cell-prior --calc-pme \
-                        $raw_data_dir/$filename_1 $raw_data_dir/$filename_2 \
+                        $raw_data_dir/$filename'_1.fq' $raw_data_dir/$filename'_2.fq' \
                         Simulation/ref/reference Simulation/data/temp/$filename
     fi
 
