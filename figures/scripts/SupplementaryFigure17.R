@@ -27,7 +27,7 @@ sc_kolod<-data.frame(sc_kolod, origin="ES single cell")
 
 
 #bulk Kolod et al expression matrix
-bulk_ES<-read.table(""../Simulation/Kallisto_results_real_data/ERR522956/abundance.tsv"", header=T)
+bulk_ES<-read.table("../../Simulation/Kallisto_results_real_data/ERR522956/abundance.tsv", header=T)
 bulk_ES<-make_df(bulk_ES, "bulk_ES", "ES bulk")
 
 master_df<-rbind(sc_kolod, bulk_ES)
