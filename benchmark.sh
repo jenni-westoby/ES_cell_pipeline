@@ -68,7 +68,7 @@ benchmark(){
           filename=`echo $base |awk -F_ '{print $1}'`
           cd $memory
           #The line below will need to be edited for your LSF job system.
-          bsub -n8 -R"span[hosts=1]" -c 99999 -G team_hemberg -q normal -o $TEAM/temp.logs/"output."$filename$1 -e $TEAM/temp.logs/"error."$filename$1 -R"select[mem>200000] rusage[mem=200000]" -M 200000 ./quantify.sh $1 $filename
+          ./quantify.sh $1 $filename
         done
 
         #If a data matrix hasn't been made for the ground_truth results, make it

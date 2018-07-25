@@ -5,8 +5,8 @@ benchmark(){
 
   memory=`pwd`
   mkdir Simulation/Kallisto_results_real_data
-  
-  
+
+
   if [ "$1" == "Kallisto" ]; then
     #If there is no Kallisto index, make it
     if [ ! "$(ls -A Simulation/indices/Kallisto)" ]; then
@@ -21,8 +21,7 @@ benchmark(){
     base=`echo $i |awk -F/ '{print $2}'`
     filename=`echo $base |awk -F_ '{print $1}'`
     cd $memory
-    #The line below will need to be edited for your LSF job system.
-    bsub -n8 -R"span[hosts=1]" -c 99999 -G team_hemberg -q normal -o $TEAM/temp.logs/"output."$filename$1 -e $TEAM/temp.logs/"error."$filename$1 -R"select[mem>100000] rusage[mem=100000]" -M 100000 ./quantify_real_data.sh $1 $filename
+    ./quantify_real_data.sh $1 $filename
   done
 
 }

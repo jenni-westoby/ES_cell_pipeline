@@ -28,7 +28,7 @@ QC() {
       filename=`echo $base | rev | cut -d _ -f2- | rev`
       end=`echo $base |awk -F. '{print $(NF-2)"."$(NF-1)"."$(NF)}' | awk -F_ '{print $NF}'`
       cd $memory
-      bsub -n8 -R"span[hosts=1]" -c 99999 -G team_hemberg -q normal -o $TEAM/temp.logs/output.$filename"qcsim" -e $TEAM/temp.logs/error.$filename"qcsim" -R"select[mem>100000] rusage[mem=100000]" -M 100000 qualitycontrol $filename Simulation/data/simulated ${end%/} "simulated"
+      qualitycontrol $filename Simulation/data/simulated ${end%/} "simulated"
     done
 
   #If there are three args, check that the STAR index exists and if not make it, then produce quality control statistics for raw data
@@ -52,7 +52,7 @@ QC() {
       end=`echo $base |awk -F. '{print $(NF-2)"."$(NF-1)"."$(NF)}' | awk -F_ '{print $NF}'`
       data_dir=${3%/}
       cd $memory
-      bsub -n8 -R"span[hosts=1]" -c 99999 -G team_hemberg -q normal -o $TEAM/temp.logs/output.$filename"qcraw" -e $TEAM/temp.logs/error.$filename"qcraw" -R"select[mem>100000] rusage[mem=100000]" -M 100000 qualitycontrol $filename $data_dir ${end%/} "raw"
+      qualitycontrol $filename $data_dir ${end%/} "raw"
     done
 
   #Otherwise, print an error message and exit
