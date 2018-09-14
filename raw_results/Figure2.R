@@ -52,7 +52,7 @@ anno<-as.data.frame(cbind(batch,ids))
 rownames(anno)<-anno$ids
 
 teich_scater <- SingleCellExperiment(
-  assays = list(counts = as.matrix(single_cell)), 
+  assays = list(counts = as.matrix(single_cell)),
   colData = anno
 )
 
@@ -98,7 +98,7 @@ anno<-as.data.frame(cbind(batch,ids))
 rownames(anno)<-anno$ids
 
 teich_scater <- SingleCellExperiment(
-  assays = list(counts = as.matrix(single_cell)), 
+  assays = list(counts = as.matrix(single_cell)),
   colData = anno
 )
 
@@ -297,4 +297,4 @@ spearmans_data<-cbind(spearmans_data, statistic=rep("spearmans", nrow(spearmans_
 nrmse_data<-cbind(nrmse_data, statistic=rep("nrmse", nrow(nrmse_data)))
 
 ggplot_results<-rbind(spearmans_data,nrmse_data,F1_data,precision_data,recall_data)
-write.table(ggplot_results, "../figures/data/Figure2.txt")
+write.table(ggplot_results, "../figures/data/Figure3.txt")

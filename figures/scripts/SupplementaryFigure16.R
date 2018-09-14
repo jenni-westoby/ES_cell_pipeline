@@ -46,7 +46,7 @@ ES_bulk<-cbind(ES_bulk[,1:2], Value=ES_bulk[,4], Experiment="bulk")
 
 #READ IN SINGLE CELL DATA
 #Read in ES
-ES_single<-read.table("../data/Figure2.txt")
+ES_single<-read.table("../data/Figure3.txt")
 
 #Sort out columns of ES_single
 ES_single<-data.frame(Statistic=ES_single$statistic, Tool=ES_single$Var1, Value=as.numeric(ES_single$value), Experiment="single")
@@ -70,11 +70,11 @@ ES_precision<-make_ggplot(ES_precision, "Precision", "Precision")
 ES_recall<-make_ggplot(ES_recall, "Recall", "Recall")
 ES_F1<-make_ggplot(ES_F1, "F1", "F1")
 
-ggarrange(ES_F1, ggarrange(ES_precision, ES_recall, nrow=2), ES_spearmans,ES_nrmse,                                         
+ggarrange(ES_F1, ggarrange(ES_precision, ES_recall, nrow=2), ES_spearmans,ES_nrmse,
           nrow = 2,
           ncol = 2,
-          labels = c("A","","B", "C")                                 
-) 
+          labels = c("A","","B", "C")
+)
 
 ggsave("../pdfs/SupplementaryFigure16.pdf", plot = last_plot(), width=170 *2, units=c("mm") )
 ggsave("../pngs/SupplementaryFigure16.png", plot = last_plot(), width=170 *2, units=c("mm"))

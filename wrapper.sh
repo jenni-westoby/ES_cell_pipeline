@@ -45,7 +45,7 @@ cp -r Simulation/QC_stats/simulated raw_results/data/
 
 #format data to make figures
 cd raw_results
-Rscript Figure2.R
+Rscript Figure3.R
 Rscript Figure4.R
 Rscript Figure5a.R
 Rscript Figure5b.R
@@ -56,7 +56,7 @@ Rscript SupplementaryFigure12.R
 
 #make figure pdfs
 cd ../figures/scripts
-Rscript Figure2.R
+Rscript Figure3.R
 Rscript Figure5.R
 Rscript Figure6.R
 Rscript SupplementaryFigure10.R
